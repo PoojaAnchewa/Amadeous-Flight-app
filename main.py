@@ -38,20 +38,30 @@ try:
         destinationLocationCode='DEL',
         departureDate='2023-12-01',
         adults=1,
-        currencyCode='INR'
+        currencyCode='INR',
     )
     for num, x in enumerate(response.data, 1):
         print(num)
         print(x['price']['total'])
         if (len(x['itineraries'][0]['segments']) == 2):
             f1 = {'First fight':
-                  [x['itineraries'][0]['segments'][0]['departure']['iataCode'],
-                   x['itineraries'][0]['segments'][0]['arrival']['iataCode']
-                   ]}
-            f2 = {'Second fight': [
-                x['itineraries'][0]['segments'][1]['departure']['iataCode'],
-                x['itineraries'][0]['segments'][1]['arrival']['iataCode']
-            ]}
+                  [
+                      x['itineraries'][0]['segments'][0]['departure']['iataCode'],
+                      x['itineraries'][0]['segments'][0]['arrival']['iataCode']
+                  ],
+                  "Departure time": x['itineraries'][0]['segments'][0]['departure']['at'],
+                  "Arrival time": x['itineraries'][0]['segments'][0]['arrival']['at'],
+                  "Duration": x['itineraries'][0]['segments'][0]['duration']
+                  }
+            f2 = {'Second fight':
+                  [
+                      x['itineraries'][0]['segments'][1]['departure']['iataCode'],
+                      x['itineraries'][0]['segments'][1]['arrival']['iataCode']
+                  ],
+                  "Departure time": x['itineraries'][0]['segments'][1]['departure']['at'],
+                  "Arrival time": x['itineraries'][0]['segments'][1]['arrival']['at'],
+                  "Duration": x['itineraries'][0]['segments'][1]['duration']
+                  }
             print(f1, f2)
         else:
             f1 = {'Single fight':
