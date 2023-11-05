@@ -1,7 +1,7 @@
 import axios from "axios";
 import './App.css';
 import { useState, useEffect } from "react";
-
+import { List, ListItem, ListItemText, ListItemIcon, Typography, Paper } from '@mui/material';
 
 function App() {
 
@@ -17,10 +17,10 @@ function App() {
     originLocationCode: "DEL",
     destinationLocationCode: "BOM",
     departureDate: "2023-12-24",
-    returnDate: "2023-12-25",
+    // returnDate: "2023-12-25",
     adults: 1,
     currencyCode: "INR",
-    max: 5,
+    max: 20,
   };
 
   const currentTimeInSeconds = () => { return Math.floor(Date.now() / 1000); };
@@ -76,7 +76,6 @@ function App() {
   useEffect(() => {
     if (!accessT || currentTimeInSeconds() > expiresIn) {
       fetchAcessToken();
-      // console.log("Access Token:", accessToken);
     }
     else {
       console.log("Token expires at ", new Date(expiresIn * 1000).toLocaleString());
@@ -85,7 +84,21 @@ function App() {
   }, []);
 
   return (
-    <>Hello world</>
+    <>
+      {data != null ? (
+        <ui>
+          {data.map((item, index) =>
+            <li key={item.id}>
+              <p>{item.id} {item.itineraries[0]["segments"][0]["departure"]["iataCode"]} {"->"}
+                {item.itineraries[0]["segments"][0]["arrival"]["iataCode"]}</p>
+              <p>Departure Time: {item.itineraries[0]["segments"][0]["departure"]["at"]}</p>
+              <p>Arrival Time: {item.itineraries[0]["segments"][0]["arrival"]["at"]}</p>
+              <p>Carrier code: {item.itineraries[0]["segments"][0]["operating"]["carrierCode"]}</p>
+              <p>Total: {item["price"]["total"]}</p>
+            </li>)}
+        </ui>
+      ) : (<>Hello world</>)}
+    </>
   );
 }
 
