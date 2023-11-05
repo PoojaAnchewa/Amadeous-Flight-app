@@ -1,9 +1,12 @@
-import './App.css'
+import { printData } from './amadeus_api.js';
+import './App.css';
+
 
 function App() {
-  return(
+  printData();
+  return (
     <>Hello world</>
-  )
+  );
 }
 
-export default App
+export default App;
