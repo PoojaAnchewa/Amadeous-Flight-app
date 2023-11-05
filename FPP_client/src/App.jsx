@@ -1,7 +1,7 @@
 import axios from "axios";
 import './App.css';
 import { useState, useEffect } from "react";
-import { List, ListItem, ListItemText, ListItemIcon, Typography, Paper } from '@mui/material';
+import { List, ListItem, Card, CardContent, Typography, Paper, Grid } from '@mui/material';
 
 function App() {
 
@@ -84,21 +84,29 @@ function App() {
   }, []);
 
   return (
-    <>
+    <Paper elevation={3}>
       {data != null ? (
-        <ui>
+        <List>
           {data.map((item, index) =>
-            <li key={item.id}>
-              <p>{item.id} {item.itineraries[0]["segments"][0]["departure"]["iataCode"]} {"->"}
-                {item.itineraries[0]["segments"][0]["arrival"]["iataCode"]}</p>
-              <p>Departure Time: {item.itineraries[0]["segments"][0]["departure"]["at"]}</p>
-              <p>Arrival Time: {item.itineraries[0]["segments"][0]["arrival"]["at"]}</p>
-              <p>Carrier code: {item.itineraries[0]["segments"][0]["operating"]["carrierCode"]}</p>
-              <p>Total: {item["price"]["total"]}</p>
-            </li>)}
-        </ui>
+            <ListItem key={item.id}>
+              <Grid container spacing={2}>
+                <Grid item xs={12} sm={6}>
+                  <Card>
+                    <CardContent>
+                      <Typography>{item.id} {item.itineraries[0]["segments"][0]["departure"]["iataCode"]} {"->"}
+                        {item.itineraries[0]["segments"][0]["arrival"]["iataCode"]}</Typography>
+                      <Typography>Departure Time: {item.itineraries[0]["segments"][0]["departure"]["at"]}</Typography>
+                      <Typography>Arrival Time: {item.itineraries[0]["segments"][0]["arrival"]["at"]}</Typography>
+                      <Typography>Carrier code: {item.itineraries[0]["segments"][0]["operating"]["carrierCode"]}</Typography>
+                      <Typography>Total: {item["price"]["total"]}</Typography>
+                    </CardContent>
+                  </Card>
+                </Grid>
+              </Grid>
+            </ListItem>)}
+        </List>
       ) : (<>Hello world</>)}
-    </>
+    </Paper>
   );
 }
 
