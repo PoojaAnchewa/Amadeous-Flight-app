@@ -3,7 +3,7 @@ import './App.css';
 import { useState, useEffect } from "react";
 import { List, ListItem, Card, CardContent, Typography, Paper, Grid, CardMedia } from '@mui/material';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-
+import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
 function App() {
 
   const [data, setData] = useState(null);
@@ -78,6 +78,14 @@ function App() {
   const fetchlogo = (item) => {
     return item.itineraries[0]["segments"][0]["operating"]["carrierCode"];
   };
+
+  const handlDateTime = (item, key) => {
+    const dateObj = new Date(item.itineraries[0]["segments"][0][key]["at"]);
+    const formattedDate = dateObj.toLocaleString("en-US", {
+      timeZone: "Asia/Kolkata",
+    });
+    return formattedDate;
+  };
   useEffect(() => {
     if (!accessT || currentTimeInSeconds() > expiresIn) {
       fetchAcessToken();
@@ -91,24 +99,24 @@ function App() {
   return (
     <Paper elevation={3}>
       {data != null ? (
-        <List>
+        <List >
           {data.map((item, index) =>
-            <ListItem key={item.id}>
+            <ListItem key={item.id} >
               <Grid container spacing={2}>
-                <Grid item sx={{ width: 1 }}>
-                  <Card sx={{ width: '75%' }}>
-                    <CardContent sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
-                      <Typography>{item.id}</Typography>
+                <Grid item sx={{ display: "flex", justifyContent: "center", alignItems: "center", width: 1 }}>
+                  <Card sx={{ width: '85%' }}>
+                    <CardContent sx={{ display: "flex", flexDirection: "row", justifyContent: "space-evenly", alignItems: "center" }}>
+                      <Typography sx={{ marginRight: "2rem" }}>{item.id}</Typography>
                       <CardMedia
                         component="img"
-                        sx={{ width: "50px", height: "50px", objectFit: "contain", marginRight: "2rem" }}
+                        sx={{ width: "70px", height: "70px", objectFit: "contain", marginRight: "2rem" }}
                         image={`https://pics.avs.io/640/320/${fetchlogo(item)}.png`}
                       ></CardMedia>
-                      <Typography sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "10%" }}> {item.itineraries[0]["segments"][0]["departure"]["iataCode"]}<ArrowForwardIcon /> {item.itineraries[0]["segments"][0]["arrival"]["iataCode"]}</Typography>
-                      <Typography sx={{ width: "30%" }}>Departure: {item.itineraries[0]["segments"][0]["departure"]["at"]}</Typography>
-                      <Typography>Arrival: {item.itineraries[0]["segments"][0]["arrival"]["at"]}</Typography>
+                      <Typography sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "10%", marginRight: "2rem" }}> {item.itineraries[0]["segments"][0]["departure"]["iataCode"]}<ArrowForwardIcon /> {item.itineraries[0]["segments"][0]["arrival"]["iataCode"]}</Typography>
+                      <Typography sx={{ width: "30%", marginRight: "1rem" }}>Departure: {handlDateTime(item, "departure")}</Typography>
+                      <Typography sx={{ width: "30%", marginRight: "1rem" }}>Arrival: {handlDateTime(item, "arrival")}</Typography>
                       {/* <Typography>Carrier code: {item.itineraries[0]["segments"][0]["operating"]["carrierCode"]}</Typography> */}
-                      <Typography>Total: {item["price"]["total"]}</Typography>
+                      <Typography sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "5%", marginRight: "2rem" }}><CurrencyRupeeIcon />{item["price"]["total"]}</Typography>
 
                     </CardContent>
 
