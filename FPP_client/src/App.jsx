@@ -1,9 +1,10 @@
 import axios from "axios";
 import './App.css';
 import { useState, useEffect } from "react";
-import { List, ListItem, Card, CardContent, Typography, Paper, Grid, CardMedia } from '@mui/material';
+import { List, ListItem, Card, CardContent, Typography, Box, Grid, CardMedia, AppBar, Toolbar, Button } from '@mui/material';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
+
 function App() {
 
   const [data, setData] = useState(null);
@@ -18,7 +19,6 @@ function App() {
     originLocationCode: "DEL",
     destinationLocationCode: "BOM",
     departureDate: "2023-12-24",
-    // returnDate: "2023-12-25",
     adults: 1,
     currencyCode: "INR",
     max: 20,
@@ -97,37 +97,45 @@ function App() {
   }, []);
 
   return (
-    <Paper elevation={3}>
-      {data != null ? (
+    <Box >
+      <AppBar position="sticky">
+        <Toolbar>
+          <Typography variant="h6" component="div" sx={ { flexGrow: 1 } }>
+            ✈️ Flight price prediction
+          </Typography>
+          <Button color="inherit">Login out</Button>
+        </Toolbar>
+      </AppBar>
+      { data != null ? (
         <List >
-          {data.map((item, index) =>
-            <ListItem key={item.id} >
-              <Grid container spacing={2}>
-                <Grid item sx={{ display: "flex", justifyContent: "center", alignItems: "center", width: 1 }}>
-                  <Card sx={{ width: '85%' }}>
-                    <CardContent sx={{ display: "flex", flexDirection: "row", justifyContent: "space-evenly", alignItems: "center" }}>
-                      <Typography sx={{ marginRight: "2rem" }}>{item.id}</Typography>
+          { data.map((item, index) =>
+            <ListItem key={ item.id } >
+              <Grid container spacing={ 2 }>
+                <Grid item sx={ { display: "flex", justifyContent: "center", alignItems: "center", width: 1 } }>
+                  <Card sx={ { width: '85%' } }>
+                    <CardContent sx={ { display: "flex", flexDirection: "row", justifyContent: "space-evenly", alignItems: "center" } }>
+                      <Typography sx={ { marginRight: "2rem" } }>{ item.id }</Typography>
                       <CardMedia
                         component="img"
-                        sx={{ width: "70px", height: "70px", objectFit: "contain", marginRight: "2rem" }}
-                        image={`https://pics.avs.io/640/320/${fetchlogo(item)}.png`}
+                        sx={ { width: "70px", height: "70px", objectFit: "contain", marginRight: "2rem" } }
+                        image={ `https://pics.avs.io/640/320/${fetchlogo(item)}.png` }
                       ></CardMedia>
-                      <Typography sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "10%", marginRight: "2rem" }}> {item.itineraries[0]["segments"][0]["departure"]["iataCode"]}<ArrowForwardIcon /> {item.itineraries[0]["segments"][0]["arrival"]["iataCode"]}</Typography>
-                      <Typography sx={{ width: "30%", marginRight: "1rem" }}>Departure: {handlDateTime(item, "departure")}</Typography>
-                      <Typography sx={{ width: "30%", marginRight: "1rem" }}>Arrival: {handlDateTime(item, "arrival")}</Typography>
-                      {/* <Typography>Carrier code: {item.itineraries[0]["segments"][0]["operating"]["carrierCode"]}</Typography> */}
-                      <Typography sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "5%", marginRight: "2rem" }}><CurrencyRupeeIcon />{item["price"]["total"]}</Typography>
+                      <Typography sx={ { display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "10%", marginRight: "2rem" } }> { item.itineraries[0]["segments"][0]["departure"]["iataCode"] }<ArrowForwardIcon /> { item.itineraries[0]["segments"][0]["arrival"]["iataCode"] }</Typography>
+                      <Typography sx={ { width: "30%", marginRight: "1rem" } }>Departure: { handlDateTime(item, "departure") }</Typography>
+                      <Typography sx={ { width: "30%", marginRight: "1rem" } }>Arrival: { handlDateTime(item, "arrival") }</Typography>
+                      {/* <Typography>Carrier code: {item.itineraries[0]["segments"][0]["operating"]["carrierCode"]}</Typography> */ }
+                      <Typography sx={ { display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "5%", marginRight: "2rem" } }><CurrencyRupeeIcon />{ item["price"]["total"] }</Typography>
 
                     </CardContent>
 
                   </Card>
                 </Grid>
               </Grid>
-            </ListItem>)}
+            </ListItem>) }
         </List>
       ) : (<>Hello world</>)
       }
-    </Paper >
+    </Box >
   );
 }
 
