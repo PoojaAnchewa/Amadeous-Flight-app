@@ -1,7 +1,8 @@
 import axios from "axios";
 import './App.css';
 import { useState, useEffect } from "react";
-import { List, ListItem, Card, CardContent, Typography, Paper, Grid } from '@mui/material';
+import { List, ListItem, Card, CardContent, Typography, Paper, Grid, CardMedia } from '@mui/material';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
 function App() {
 
@@ -67,12 +68,16 @@ function App() {
       }).then((response) => {
         const newData = response.data.data;
         setData(newData);
+        console.log(newData);
       }).
       catch((error) =>
         console.error("Error making API request:", error)
       );
   };
 
+  const fetchlogo = (item) => {
+    return item.itineraries[0]["segments"][0]["operating"]["carrierCode"];
+  };
   useEffect(() => {
     if (!accessT || currentTimeInSeconds() > expiresIn) {
       fetchAcessToken();
@@ -90,23 +95,31 @@ function App() {
           {data.map((item, index) =>
             <ListItem key={item.id}>
               <Grid container spacing={2}>
-                <Grid item xs={12} sm={6}>
-                  <Card>
-                    <CardContent>
-                      <Typography>{item.id} {item.itineraries[0]["segments"][0]["departure"]["iataCode"]} {"->"}
-                        {item.itineraries[0]["segments"][0]["arrival"]["iataCode"]}</Typography>
-                      <Typography>Departure Time: {item.itineraries[0]["segments"][0]["departure"]["at"]}</Typography>
-                      <Typography>Arrival Time: {item.itineraries[0]["segments"][0]["arrival"]["at"]}</Typography>
-                      <Typography>Carrier code: {item.itineraries[0]["segments"][0]["operating"]["carrierCode"]}</Typography>
+                <Grid item sx={{ width: 1 }}>
+                  <Card sx={{ width: '75%' }}>
+                    <CardContent sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+                      <Typography>{item.id}</Typography>
+                      <CardMedia
+                        component="img"
+                        sx={{ width: "50px", height: "50px", objectFit: "contain", marginRight: "2rem" }}
+                        image={`https://pics.avs.io/640/320/${fetchlogo(item)}.png`}
+                      ></CardMedia>
+                      <Typography sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "10%" }}> {item.itineraries[0]["segments"][0]["departure"]["iataCode"]}<ArrowForwardIcon /> {item.itineraries[0]["segments"][0]["arrival"]["iataCode"]}</Typography>
+                      <Typography sx={{ width: "30%" }}>Departure: {item.itineraries[0]["segments"][0]["departure"]["at"]}</Typography>
+                      <Typography>Arrival: {item.itineraries[0]["segments"][0]["arrival"]["at"]}</Typography>
+                      {/* <Typography>Carrier code: {item.itineraries[0]["segments"][0]["operating"]["carrierCode"]}</Typography> */}
                       <Typography>Total: {item["price"]["total"]}</Typography>
+
                     </CardContent>
+
                   </Card>
                 </Grid>
               </Grid>
             </ListItem>)}
         </List>
-      ) : (<>Hello world</>)}
-    </Paper>
+      ) : (<>Hello world</>)
+      }
+    </Paper >
   );
 }
 
