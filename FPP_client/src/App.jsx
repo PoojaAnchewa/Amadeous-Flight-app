@@ -1,10 +1,12 @@
 // src/App.js
 import React, { useState } from 'react';
+import MainApp from './components/main_app';
 
 function App() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [message, setMessage] = useState('');
+    const [auth, setAuth] = useState(false);
 
     const handleRegister = async () => {
         try {
@@ -35,6 +37,7 @@ function App() {
 
             const data = await response.json();
             setMessage(data.message);
+            setAuth(true);
         } catch (error) {
             console.error('Error during login:', error);
         }
@@ -42,26 +45,26 @@ function App() {
 
     return (
         <div className="App">
-            <h1>Login and Register</h1>
-            <div>
-                <label>
-                    Username:
-                    <input type="text" value={ username } onChange={ (e) => setUsername(e.target.value) } />
-                </label>
-            </div>
-            <div>
-                <label>
-                    Password:
-                    <input type="password" value={ password } onChange={ (e) => setPassword(e.target.value) } />
-                </label>
-            </div>
-            <div>
-                <button onClick={ handleRegister }>Register</button>
-                <button onClick={ handleLogin }>Login</button>
-            </div>
-            <div>
-                <p>{ message }</p>
-            </div>
+            { auth==false ? (<><h1>Login and Register</h1>
+                <div>
+                    <label>
+                        Username:
+                        <input type="text" value={ username } onChange={ (e) => setUsername(e.target.value) } />
+                    </label>
+                </div>
+                <div>
+                    <label>
+                        Password:
+                        <input type="password" value={ password } onChange={ (e) => setPassword(e.target.value) } />
+                    </label>
+                </div>
+                <div>
+                    <button onClick={ handleRegister }>Register</button>
+                    <button onClick={ handleLogin }>Login</button>
+                </div>
+                <div>
+                    <p>{ message }</p>
+                </div></>) : (<MainApp setAuth={ setAuth } />) }
         </div>
     );
 }

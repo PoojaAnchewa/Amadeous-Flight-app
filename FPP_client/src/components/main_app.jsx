@@ -9,7 +9,7 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
-function MainApp() {
+const MainApp = ({ setAuth }) => {
 
   const [data, setData] = useState(null);
 
@@ -115,7 +115,7 @@ function MainApp() {
           <Typography variant="h6" component="div" sx={ { flexGrow: 1 } }>
             ✈️ Flight price prediction
           </Typography>
-          <Button color="inherit">Login out</Button>
+          <Button color="inherit" onClick={ () => { setAuth(false); } }>Login out</Button>
         </Toolbar>
       </AppBar>
       <Box sx={ { marginTop: "2rem", marginBottom: "2rem", display: "flex", flexDirection: "row", justifyContent: "space-evenly", alignItems: "center", width: 1 } }>
@@ -159,6 +159,6 @@ function MainApp() {
       }
     </Box >
   );
-}
+};
 
 export default MainApp;
