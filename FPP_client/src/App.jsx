@@ -30,6 +30,7 @@ function App() {
             });
 
             const data = await response.json();
+
             setMessage(data.message);
             setStatus(data.severity);
         } catch (error) {
@@ -69,12 +70,15 @@ function App() {
         } catch (error) {
             console.error('Error during login:', error);
         }
+
     };
 
     const handleLogout = () => {
         setAuth(false);
         setStatus("");
         setMessage("");
+        setUsername("");
+        setPassword("");
     };
     return (
         <div className="App" style={ { display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" } } >
@@ -82,8 +86,8 @@ function App() {
                 <div style={ { width: "350px" } }>
                     <h1>Login and Register</h1>
                     <div style={ { display: "flex", flexDirection: "column", marginBottom: "2rem" } }>
-                        <TextField sx={ { marginBottom: "2rem" } } variant="outlined" label="User Name" type="text" value={ username } onChange={ (e) => setUsername(e.target.value) } />
-                        <TextField sx={ { marginBottom: "2rem" } } variant="outlined" label="Password" type="password" value={ password } onChange={ (e) => setPassword(e.target.value) } />
+                        <TextField className='text-field' sx={ { marginBottom: "2rem" } } variant="outlined" label="User Name" type="text" value={ username } onChange={ (e) => setUsername(e.target.value) } />
+                        <TextField className='text-field' sx={ { marginBottom: "2rem" } } variant="outlined" label="Password" type="password" value={ password } onChange={ (e) => setPassword(e.target.value) } />
                         <div style={ { display: "flex", flexDirection: "row", justifyContent: "space-around" } }>
                             <Button sx={ { width: "40%" } } variant="contained" onClick={ handleRegister }>Register</Button>
                             <Button sx={ { width: "40%" } } variant="contained" onClick={ handleLogin }>Login</Button>
