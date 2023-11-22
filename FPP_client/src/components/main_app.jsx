@@ -1,7 +1,7 @@
 import axios from "axios";
 import './main_app.css';
 import { useState, useEffect } from "react";
-import { List, ListItem, Card, CardContent, Typography, Box, Grid, CardMedia, AppBar, Toolbar, Button } from '@mui/material';
+import { List, ListItem, Card, CardContent, Typography, Box, Grid, CardMedia, AppBar, Toolbar, Button, TextField } from '@mui/material';
 import dayjs from 'dayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -9,15 +9,26 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
+
+const airportCodes = [
+  { code: 'JFK', name: 'John F. Kennedy International Airport' },
+  { code: 'LAX', name: 'Los Angeles International Airport' },
+  { code: 'ORD', name: "O'Hare International Airport " },
+  { code: 'ATL', name: 'Hartsfield-Jackson Atlanta International Airport' },
+  { code: 'DFW', name: 'Dallas/Fort Worth International Airport' },
+];
+
 const MainApp = ({ handleLogout }) => {
 
   const [data, setData] = useState(null);
+  const [airCode, setAirCode] = useState("");
 
   const apiKey = process.env.API_KEY;
   const apiSecret = process.env.API_SECRET;
 
   const accessT = localStorage.getItem("access_token");
   const expiresIn = localStorage.getItem("expires_in");
+
   const setCurrDate = () => {
     const today = new Date();
     const tomorrow = new Date(today);
@@ -38,7 +49,37 @@ const MainApp = ({ handleLogout }) => {
 
   const currentTimeInSeconds = () => { return Math.floor(Date.now() / 1000); };
 
+  const searchBar = document.getElementById('search-bar');
+  const suggestionsList = document.getElementById('suggestions');
 
+  if (searchBar) {
+    searchBar.addEventListener('input', () => {
+      const searchTerm = searchBar.value.toLowerCase();
+      const filteredSuggestions = airportCodes.filter(airport => {
+        const airportCode = airport.code.toLowerCase();
+        const airportName = airport.name.toLowerCase();
+        return airportCode.includes(searchTerm) || airportName.includes(searchTerm);
+      });
+
+      if (filteredSuggestions.length > 0) {
+        suggestionsList.style.display = 'block';
+        suggestionsList.innerHTML = '';
+
+        filteredSuggestions.forEach(airport => {
+          const suggestion = document.createElement('li');
+          suggestion.textContent = `${airport.code} - ${airport.name}`;
+          suggestion.addEventListener('click', () => {
+            searchBar.value = airport.code;
+            suggestionsList.style.display = 'none';
+          });
+          suggestionsList.appendChild(suggestion);
+        });
+      } else {
+        suggestionsList.style.display = 'none';
+      }
+
+    });
+  }
   const fetchAcessToken = async () => {
 
     const tokenRequestData = {
@@ -98,6 +139,7 @@ const MainApp = ({ handleLogout }) => {
     });
     return formattedDate;
   };
+
   useEffect(() => {
     if (!accessT || currentTimeInSeconds() > expiresIn) {
       fetchAcessToken();
@@ -120,6 +162,12 @@ const MainApp = ({ handleLogout }) => {
         </Toolbar>
       </AppBar>
       <Box sx={ { marginTop: "2rem", marginBottom: "2rem", display: "flex", flexDirection: "row", justifyContent: "space-evenly", alignItems: "center", width: 1 } }>
+        <div className="search-container">
+          <TextField id="search-bar" variant="outlined" label="From" type="text" value={ airCode } onChange={ (e) => { setAirCode(e.target.value); } } />
+          <ul id="suggestions"></ul>
+        </div>
+        {/* <TextField id="search-bar" variant="outlined" label="To" type="text" value={ "" } /> */ }
+
         <LocalizationProvider dateAdapter={ AdapterDayjs }>
           <DatePicker
             label="Departure"
@@ -127,6 +175,8 @@ const MainApp = ({ handleLogout }) => {
             onChange={ (newValue) => setDepartDate(newValue) }
           />
         </LocalizationProvider>
+
+
       </Box>
       {
         data != null ? (

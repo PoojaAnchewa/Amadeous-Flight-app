@@ -3,3 +3,28 @@
   line-height: 1.5;
   font-weight: 400;
 }
+.search-container {
+  position: relative;
+}
+
+#suggestions {
+  display: none;
+  position: absolute;
+  top: 40px;
+  width: 94%;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  z-index: 1000;
+}
+
+ul {
+  padding: 3%;
+}
+#suggestions li {
+  cursor: pointer;
+  margin-bottom: 1rem;
+}
+
+#suggestions li:hover {
+  background-color: #eee;
+}

@@ -7,7 +7,9 @@ function App() {
     const [password, setPassword] = useState('');
     const [message, setMessage] = useState('');
     const [auth, setAuth] = useState(false);
-    const [status, setStatus] = useState('');;
+    const [status, setStatus] = useState('');
+
+
 
     const handleRegister = async () => {
         if (username == "") {
