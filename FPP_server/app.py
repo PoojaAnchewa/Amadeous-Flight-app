@@ -49,14 +49,14 @@ class RegistrationResource(Resource):
         password = args["password"]
 
         with app.app_context():
-            if User.query.filter_by(username=username).first():
-                return {"message": "User already exists"}, 400
+            if User.query.filter(User.username == username).first():
+                return {"message": "User already exists", "severity": "warning"}, 400
 
             new_user = User(username=username, password=password)
             db.session.add(new_user)
             db.session.commit()
 
-        return {"message": "User registered successfully"}, 201
+        return {"message": "User registered successfully", "severity": "success"}, 201
 
 
 class LoginResource(Resource):
@@ -66,12 +66,14 @@ class LoginResource(Resource):
         password = args["password"]
 
         with app.app_context():
-            user = User.query.filter_by(username=username, password=password).first()
+            user = User.query.filter(
+                User.username == username, User.password == password
+            ).first()
 
         if user:
-            return {"message": "Login successful"}, 200
+            return {"message": "Login successful", "severity": "success"}, 200
         else:
-            return {"message": "Invalid credentials"}, 401
+            return {"message": "Invalid credentials", "severity": "error"}, 401
 
 
 api.add_resource(HelloWorldResource, "/")
