@@ -77,22 +77,25 @@ function App() {
         setMessage("");
     };
     return (
-        <div className="App">
-            { auth == false ? (<Box sx={ { width: "350px" } }>
-                <h1>Login and Register</h1>
-                <div style={ { display: "flex", flexDirection: "column", marginBottom: "2rem" } }>
-                    <TextField sx={ { marginBottom: "2rem" } } variant="outlined" label="User Name" type="text" value={ username } onChange={ (e) => setUsername(e.target.value) } />
-                    <TextField sx={ { marginBottom: "2rem" } } variant="outlined" label="Password" type="password" value={ password } onChange={ (e) => setPassword(e.target.value) } />
-                    <div style={ { display: "flex", flexDirection: "row", justifyContent: "space-around" } }>
-                        <Button sx={ { width: "40%" } } variant="contained" onClick={ handleRegister }>Register</Button>
-                        <Button sx={ { width: "40%" } } variant="contained" onClick={ handleLogin }>Login</Button>
+        <div className="App" style={ { display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" } } >
+            { auth == false ? (
+                <div style={ { width: "350px" } }>
+                    <h1>Login and Register</h1>
+                    <div style={ { display: "flex", flexDirection: "column", marginBottom: "2rem" } }>
+                        <TextField sx={ { marginBottom: "2rem" } } variant="outlined" label="User Name" type="text" value={ username } onChange={ (e) => setUsername(e.target.value) } />
+                        <TextField sx={ { marginBottom: "2rem" } } variant="outlined" label="Password" type="password" value={ password } onChange={ (e) => setPassword(e.target.value) } />
+                        <div style={ { display: "flex", flexDirection: "row", justifyContent: "space-around" } }>
+                            <Button sx={ { width: "40%" } } variant="contained" onClick={ handleRegister }>Register</Button>
+                            <Button sx={ { width: "40%" } } variant="contained" onClick={ handleLogin }>Login</Button>
+                        </div>
                     </div>
-                </div>
 
-                { message != "" ? (<div>
-                    <Alert severity={ status }>{ message }</Alert>
-                </div>) : <></> }
-            </Box>) : (<MainApp handleLogout={ handleLogout } />)
+                    { message != "" ? (
+                        <div>
+                            <Alert severity={ status }>{ message }</Alert>
+                        </div>
+                    ) : <></> }
+                </div>) : (<MainApp handleLogout={ handleLogout } />)
             }
         </div >
     );

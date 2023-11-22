@@ -105,12 +105,13 @@ const MainApp = ({ handleLogout }) => {
     else {
       console.log("Token expires at ", new Date(expiresIn * 1000).toLocaleString());
       fetchData();
+      console.log('brr');
     }
   }, [departDate]);
 
   return (
-    <Box >
-      <AppBar position="sticky">
+    <Box width={ 1 }>
+      <AppBar position="sticky" >
         <Toolbar>
           <Typography variant="h6" component="div" sx={ { flexGrow: 1 } }>
             ✈️ Flight price prediction
