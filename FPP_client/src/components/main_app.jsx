@@ -16,7 +16,8 @@ const MainApp = ({ handleLogout }) => {
   const [data, setData] = useState(null);
   const [airCodeDep, setAirCodeDep] = useState("");
   const [airCodeArvl, setAirCodeArvl] = useState("");
-
+  const [tempDep, setTempDep] = useState("");
+  const [tempArvl, setTempArvl] = useState("");
 
   const apiKey = process.env.API_KEY;
   const apiSecret = process.env.API_SECRET;
@@ -45,7 +46,7 @@ const MainApp = ({ handleLogout }) => {
   const currentTimeInSeconds = () => { return Math.floor(Date.now() / 1000); };
 
 
-  const handleSuggestionON = (setcode, searchBarID, suggestionsID) => {
+  const handleSuggestionON = (setcode, setTempcode, searchBarID, suggestionsID) => {
     const searchBar = document.getElementById(searchBarID);
     const suggestionsList = document.getElementById(suggestionsID);
     if (searchBar) {
@@ -66,11 +67,13 @@ const MainApp = ({ handleLogout }) => {
           filteredSuggestions.forEach(airport => {
             const suggestion = document.createElement('li');
             suggestion.textContent = `${airport.Code} - ${airport.Airport}`;
+
             suggestion.addEventListener('click', () => {
-              // searchBar.value = airport.Code;
+
               suggestionsList.style.display = 'none';
               console.log(airport.Code);
               setcode(airport.Code);
+              setTempcode(airport.Code);
             });
             suggestionsList.appendChild(suggestion);
           });
@@ -82,15 +85,16 @@ const MainApp = ({ handleLogout }) => {
     }
   };
 
-  // const handleSuggestionOFF = (setcode, suggestionsID) => {
-  // const suggestionsList = document.getElementById(suggestionsID);
-  // suggestionsList.style.display = 'none';
-  // const childList = suggestionsList.children;
-  // for (var i = 0; i < childList.length; i++) {
-  //   suggestionsList.removeChild(childList[i]);
-  // };
-  // setcode("");
-  // };
+  const handleSuggestionOFF = (setcode, suggestionsID) => {
+    const suggestionsList = document.getElementById(suggestionsID);
+    document.addEventListener('click', () => {
+      suggestionsList.style.display = 'none';
+      setcode("");
+      // setTempcode("");
+    });
+    document.removeEventListener('click');
+
+  };
   const fetchAcessToken = async () => {
 
     const tokenRequestData = {
@@ -177,14 +181,18 @@ const MainApp = ({ handleLogout }) => {
           <TextField id="search-bar-1"
             variant="outlined" label="From"
             type="text"
-            value={ airCodeDep }
-            onChange={ (e) => { setAirCodeDep(e.target.value); } }
+            value={ tempDep }
+            onChange={ (e) => { setTempDep(e.target.value); } }
             onFocus={ () => handleSuggestionON(
               setAirCodeDep,
+              setTempDep,
               'search-bar-1',
               'suggestions-1'
             ) }
-          // onBlur={ () => handleSuggestionOFF(setAirCodeDep, 'suggestions-1') } 
+            onBlur={ () => handleSuggestionOFF(
+              setAirCodeDep,
+              'suggestions-1'
+            ) }
           />
           <ul id="suggestions-1"></ul>
         </div>
@@ -195,14 +203,18 @@ const MainApp = ({ handleLogout }) => {
             variant="outlined"
             label="To"
             type="text"
-            value={ airCodeArvl }
-            onChange={ (e) => { setAirCodeArvl(e.target.value); } }
+            value={ tempArvl }
+            onChange={ (e) => { setTempArvl(e.target.value); } }
             onFocus={ () => handleSuggestionON(
               setAirCodeArvl,
+              setTempArvl,
               'search-bar-2',
               'suggestions-2'
             ) }
-          // onBlur={ () => handleSuggestionOFF(setAirCodeArvl, 'suggestions-2') } 
+            onBlur={ () => handleSuggestionOFF(
+              setAirCodeArvl,
+              'suggestions-2'
+            ) }
           />
           <ul id="suggestions-2"></ul>
         </div>
