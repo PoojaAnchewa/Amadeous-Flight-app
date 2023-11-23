@@ -52,34 +52,46 @@ const MainApp = ({ handleLogout }) => {
   const searchBar = document.getElementById('search-bar');
   const suggestionsList = document.getElementById('suggestions');
 
-  if (searchBar) {
-    searchBar.addEventListener('input', () => {
-      const searchTerm = searchBar.value.toLowerCase();
-      const filteredSuggestions = airportCodes.filter(airport => {
-        const airportCode = airport.code.toLowerCase();
-        const airportName = airport.name.toLowerCase();
-        return airportCode.includes(searchTerm) || airportName.includes(searchTerm);
-      });
-
-      if (filteredSuggestions.length > 0) {
-        suggestionsList.style.display = 'block';
-        suggestionsList.innerHTML = '';
-
-        filteredSuggestions.forEach(airport => {
-          const suggestion = document.createElement('li');
-          suggestion.textContent = `${airport.code} - ${airport.name}`;
-          suggestion.addEventListener('click', () => {
-            searchBar.value = airport.code;
-            suggestionsList.style.display = 'none';
-          });
-          suggestionsList.appendChild(suggestion);
+  const handleSuggestionON = () => {
+    if (searchBar) {
+      searchBar.addEventListener('input', () => {
+        const searchTerm = searchBar.value.toLowerCase();
+        const filteredSuggestions = airportCodes.filter(airport => {
+          const airportCode = airport.code.toLowerCase();
+          const airportName = airport.name.toLowerCase();
+          return airportCode.includes(searchTerm) || airportName.includes(searchTerm);
         });
-      } else {
-        suggestionsList.style.display = 'none';
-      }
 
-    });
-  }
+        if (filteredSuggestions.length > 0) {
+          suggestionsList.style.display = 'block';
+          suggestionsList.innerHTML = '';
+
+          filteredSuggestions.forEach(airport => {
+            const suggestion = document.createElement('li');
+            suggestion.textContent = `${airport.code} - ${airport.name}`;
+            suggestion.addEventListener('click', () => {
+              searchBar.value = airport.code;
+              suggestionsList.style.display = 'none';
+              setAirCode(airport.code);
+            });
+            suggestionsList.appendChild(suggestion);
+          });
+        } else {
+          suggestionsList.style.display = 'none';
+        }
+
+      });
+    }
+  };
+
+  const handleSuggestionOFF = () => {
+    suggestionsList.style.display = 'none';
+    const childList = suggestionsList.children;
+    for (var i = 0; i < childList.length; i++) {
+      suggestionsList.removeChild(childList[i]);
+    };
+    setAirCode("");
+  };
   const fetchAcessToken = async () => {
 
     const tokenRequestData = {
@@ -163,7 +175,7 @@ const MainApp = ({ handleLogout }) => {
       </AppBar>
       <Box sx={ { marginTop: "2rem", marginBottom: "2rem", display: "flex", flexDirection: "row", justifyContent: "space-evenly", alignItems: "center", width: 1 } }>
         <div className="search-container">
-          <TextField id="search-bar" variant="outlined" label="From" type="text" value={ airCode } onChange={ (e) => { setAirCode(e.target.value); } } />
+          <TextField id="search-bar" variant="outlined" label="From" type="text" value={ airCode } onChange={ (e) => { setAirCode(e.target.value); } } onFocus={ handleSuggestionON } onBlur={ handleSuggestionOFF } />
           <ul id="suggestions"></ul>
         </div>
         {/* <TextField id="search-bar" variant="outlined" label="To" type="text" value={ "" } /> */ }
