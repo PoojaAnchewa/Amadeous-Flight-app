@@ -1,5 +1,4 @@
 import axios from "axios";
-import './main_app.css';
 import { useState, useEffect } from "react";
 import { List, ListItem, Card, CardContent, Typography, Box, Grid, CardMedia, AppBar, Toolbar, Button, TextField } from '@mui/material';
 import dayjs from 'dayjs';
@@ -9,19 +8,15 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
+import airportCodes from "../airport_codes.json";
 
-const airportCodes = [
-  { code: 'JFK', name: 'John F. Kennedy International Airport' },
-  { code: 'LAX', name: 'Los Angeles International Airport' },
-  { code: 'ORD', name: "O'Hare International Airport " },
-  { code: 'ATL', name: 'Hartsfield-Jackson Atlanta International Airport' },
-  { code: 'DFW', name: 'Dallas/Fort Worth International Airport' },
-];
 
 const MainApp = ({ handleLogout }) => {
 
   const [data, setData] = useState(null);
-  const [airCode, setAirCode] = useState("");
+  const [airCodeDep, setAirCodeDep] = useState("");
+  const [airCodeArvl, setAirCodeArvl] = useState("");
+
 
   const apiKey = process.env.API_KEY;
   const apiSecret = process.env.API_SECRET;
@@ -37,10 +32,10 @@ const MainApp = ({ handleLogout }) => {
 
   };
   const [departDate, setDepartDate] = useState(dayjs(setCurrDate()));
-  console.log(departDate.format('YYYY-MM-DD'));
+  // console.log(departDate.format('YYYY-MM-DD'));
   const searchParams = {
-    originLocationCode: "DEL",
-    destinationLocationCode: "BOM",
+    originLocationCode: airCodeDep != '' ? airCodeDep : 'BOM',
+    destinationLocationCode: airCodeArvl != '' ? airCodeArvl : 'DEL',
     departureDate: departDate.format('YYYY-MM-DD'),
     adults: 1,
     currencyCode: "INR",
@@ -49,18 +44,20 @@ const MainApp = ({ handleLogout }) => {
 
   const currentTimeInSeconds = () => { return Math.floor(Date.now() / 1000); };
 
-  const searchBar = document.getElementById('search-bar');
-  const suggestionsList = document.getElementById('suggestions');
 
-  const handleSuggestionON = () => {
+  const handleSuggestionON = (setcode, searchBarID, suggestionsID) => {
+    const searchBar = document.getElementById(searchBarID);
+    const suggestionsList = document.getElementById(suggestionsID);
     if (searchBar) {
+
       searchBar.addEventListener('input', () => {
         const searchTerm = searchBar.value.toLowerCase();
-        const filteredSuggestions = airportCodes.filter(airport => {
-          const airportCode = airport.code.toLowerCase();
-          const airportName = airport.name.toLowerCase();
+        var filteredSuggestions = airportCodes.filter(airport => {
+          const airportCode = airport.Code.toLowerCase();
+          const airportName = airport.Airport.toLowerCase();
           return airportCode.includes(searchTerm) || airportName.includes(searchTerm);
         });
+        filteredSuggestions = filteredSuggestions.slice(0, 10);
 
         if (filteredSuggestions.length > 0) {
           suggestionsList.style.display = 'block';
@@ -68,11 +65,11 @@ const MainApp = ({ handleLogout }) => {
 
           filteredSuggestions.forEach(airport => {
             const suggestion = document.createElement('li');
-            suggestion.textContent = `${airport.code} - ${airport.name}`;
+            suggestion.textContent = `${airport.Code} - ${airport.Airport}`;
             suggestion.addEventListener('click', () => {
               searchBar.value = airport.code;
               suggestionsList.style.display = 'none';
-              setAirCode(airport.code);
+              setcode(airport.code);
             });
             suggestionsList.appendChild(suggestion);
           });
@@ -84,13 +81,14 @@ const MainApp = ({ handleLogout }) => {
     }
   };
 
-  const handleSuggestionOFF = () => {
+  const handleSuggestionOFF = (setcode, suggestionsID) => {
+    const suggestionsList = document.getElementById(suggestionsID);
     suggestionsList.style.display = 'none';
     const childList = suggestionsList.children;
     for (var i = 0; i < childList.length; i++) {
       suggestionsList.removeChild(childList[i]);
     };
-    setAirCode("");
+    setcode("");
   };
   const fetchAcessToken = async () => {
 
@@ -133,7 +131,7 @@ const MainApp = ({ handleLogout }) => {
       }).then((response) => {
         const newData = response.data.data;
         setData(newData);
-        console.log(newData);
+        // console.log(newData);
       }).
       catch((error) =>
         console.error("Error making API request:", error)
@@ -175,10 +173,36 @@ const MainApp = ({ handleLogout }) => {
       </AppBar>
       <Box sx={ { marginTop: "2rem", marginBottom: "2rem", display: "flex", flexDirection: "row", justifyContent: "space-evenly", alignItems: "center", width: 1 } }>
         <div className="search-container">
-          <TextField id="search-bar" variant="outlined" label="From" type="text" value={ airCode } onChange={ (e) => { setAirCode(e.target.value); } } onFocus={ handleSuggestionON } onBlur={ handleSuggestionOFF } />
-          <ul id="suggestions"></ul>
+          <TextField id="search-bar-1"
+            variant="outlined" label="From"
+            type="text"
+            value={ airCodeDep }
+            onChange={ (e) => { setAirCodeDep(e.target.value); } }
+            onFocus={ () => handleSuggestionON(
+              setAirCodeDep,
+              'search-bar-1',
+              'suggestions-1'
+            ) }
+            onBlur={ () => handleSuggestionOFF(setAirCodeDep, 'suggestions-1') } />
+          <ul id="suggestions-1"></ul>
         </div>
-        {/* <TextField id="search-bar" variant="outlined" label="To" type="text" value={ "" } /> */ }
+
+        <div className="search-container">
+          <TextField
+            id="search-bar-2"
+            variant="outlined"
+            label="To"
+            type="text"
+            value={ airCodeArvl }
+            onChange={ (e) => { setAirCodeArvl(e.target.value); } }
+            onFocus={ () => handleSuggestionON(
+              setAirCodeArvl,
+              'search-bar-2',
+              'suggestions-2'
+            ) }
+            onBlur={ () => handleSuggestionOFF(setAirCodeArvl, 'suggestions-2') } />
+          <ul id="suggestions-2"></ul>
+        </div>
 
         <LocalizationProvider dateAdapter={ AdapterDayjs }>
           <DatePicker

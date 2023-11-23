@@ -3,11 +3,19 @@
   line-height: 1.5;
   font-weight: 400;
 }
+
+body {
+  margin: 0px;
+}
+li {
+  list-style-type: none;
+}
 .search-container {
   position: relative;
 }
 
-#suggestions {
+#suggestions-1,
+#suggestions-2 {
   display: none;
   position: absolute;
   top: 40px;
@@ -20,11 +28,13 @@
 ul {
   padding: 3%;
 }
-#suggestions li {
+#suggestions-1 li,
+#suggestions-2 li {
   cursor: pointer;
   margin-bottom: 1rem;
 }
 
-#suggestions li:hover {
+#suggestions-1 li:hover,
+#suggestions-2 li:hover {
   background-color: #eee;
 }
