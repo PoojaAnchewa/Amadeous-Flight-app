@@ -67,9 +67,10 @@ const MainApp = ({ handleLogout }) => {
             const suggestion = document.createElement('li');
             suggestion.textContent = `${airport.Code} - ${airport.Airport}`;
             suggestion.addEventListener('click', () => {
-              searchBar.value = airport.code;
+              // searchBar.value = airport.Code;
               suggestionsList.style.display = 'none';
-              setcode(airport.code);
+              console.log(airport.Code);
+              setcode(airport.Code);
             });
             suggestionsList.appendChild(suggestion);
           });
@@ -81,15 +82,15 @@ const MainApp = ({ handleLogout }) => {
     }
   };
 
-  const handleSuggestionOFF = (setcode, suggestionsID) => {
-    const suggestionsList = document.getElementById(suggestionsID);
-    suggestionsList.style.display = 'none';
-    const childList = suggestionsList.children;
-    for (var i = 0; i < childList.length; i++) {
-      suggestionsList.removeChild(childList[i]);
-    };
-    setcode("");
-  };
+  // const handleSuggestionOFF = (setcode, suggestionsID) => {
+  // const suggestionsList = document.getElementById(suggestionsID);
+  // suggestionsList.style.display = 'none';
+  // const childList = suggestionsList.children;
+  // for (var i = 0; i < childList.length; i++) {
+  //   suggestionsList.removeChild(childList[i]);
+  // };
+  // setcode("");
+  // };
   const fetchAcessToken = async () => {
 
     const tokenRequestData = {
@@ -159,7 +160,7 @@ const MainApp = ({ handleLogout }) => {
       fetchData();
       console.log('brr');
     }
-  }, [departDate]);
+  }, [departDate, airCodeDep, airCodeArvl]);
 
   return (
     <Box width={ 1 }>
@@ -183,7 +184,8 @@ const MainApp = ({ handleLogout }) => {
               'search-bar-1',
               'suggestions-1'
             ) }
-            onBlur={ () => handleSuggestionOFF(setAirCodeDep, 'suggestions-1') } />
+          // onBlur={ () => handleSuggestionOFF(setAirCodeDep, 'suggestions-1') } 
+          />
           <ul id="suggestions-1"></ul>
         </div>
 
@@ -200,7 +202,8 @@ const MainApp = ({ handleLogout }) => {
               'search-bar-2',
               'suggestions-2'
             ) }
-            onBlur={ () => handleSuggestionOFF(setAirCodeArvl, 'suggestions-2') } />
+          // onBlur={ () => handleSuggestionOFF(setAirCodeArvl, 'suggestions-2') } 
+          />
           <ul id="suggestions-2"></ul>
         </div>
 
